@@ -2,6 +2,7 @@
 
 namespace Statamic\Globals;
 
+use Illuminate\Support\Collection as IlluminateCollection;
 use Statamic\Contracts\Globals\GlobalSet as Contract;
 use Statamic\Data\ExistsAsFile;
 use Statamic\Events\GlobalSetDeleted;
@@ -21,7 +22,7 @@ class GlobalSet implements Contract
     protected $handle;
     protected $localizations;
 
-    public function id()
+    public function id(): string
     {
         return $this->handle();
     }
@@ -31,6 +32,10 @@ class GlobalSet implements Contract
         return $this->fluentlyGetOrSet('handle')->args(func_get_args());
     }
 
+    /**
+     * @param  string|null  $title
+     * @return string|GlobalSet
+     */
     public function title($title = null)
     {
         return $this
@@ -41,12 +46,12 @@ class GlobalSet implements Contract
             ->args(func_get_args());
     }
 
-    public function blueprint()
+    public function blueprint(): ?\Statamic\Fields\Blueprint
     {
         return Blueprint::find('globals.'.$this->handle());
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s.%s', [
             rtrim(Stache::store('globals')->directory(), '/'),
@@ -55,7 +60,7 @@ class GlobalSet implements Contract
         ]);
     }
 
-    public function save()
+    public function save(): GlobalSet
     {
         Facades\GlobalSet::save($this);
 
@@ -64,7 +69,7 @@ class GlobalSet implements Contract
         return $this;
     }
 
-    public function delete()
+    public function delete(): bool
     {
         Facades\GlobalSet::delete($this);
 
@@ -73,13 +78,13 @@ class GlobalSet implements Contract
         return true;
     }
 
-    public function fileData()
+    public function fileData(): array
     {
         $data = [
             'title' => $this->title(),
         ];
 
-        if (! Site::hasMultiple()) {
+        if (!Site::hasMultiple()) {
             $data['data'] = Arr::removeNullValues(
                 $this->in(Site::default()->handle())->data()->all()
             );
@@ -88,14 +93,18 @@ class GlobalSet implements Contract
         return $data;
     }
 
-    public function makeLocalization($site)
+    /**
+     * @param  string  $site
+     * @return Variables
+     */
+    public function makeLocalization(string $site): Variables
     {
         return (new Variables)
             ->globalSet($this)
             ->locale($site);
     }
 
-    public function addLocalization($localization)
+    public function addLocalization(Variables $localization): GlobalSet
     {
         $localization->globalSet($this);
 
@@ -104,39 +113,42 @@ class GlobalSet implements Contract
         return $this;
     }
 
-    public function removeLocalization($localization)
+    public function removeLocalization(Variables $localization): GlobalSet
     {
         unset($this->localizations[$localization->locale()]);
 
         return $this;
     }
 
-    public function in($locale)
+    public function in($locale): ?Variables
     {
         return $this->localizations[$locale] ?? null;
     }
 
-    public function inSelectedSite()
+    public function inSelectedSite(): ?Variables
     {
         return $this->in(Site::selected()->handle());
     }
 
-    public function inCurrentSite()
+    public function inCurrentSite(): ?Variables
     {
         return $this->in(Site::current()->handle());
     }
 
-    public function inDefaultSite()
+    public function inDefaultSite(): ?Variables
     {
         return $this->in(Site::default()->handle());
     }
 
-    public function existsIn($locale)
+    public function existsIn($locale): bool
     {
         return $this->in($locale) !== null;
     }
 
-    public function localizations()
+    /**
+     * @return IlluminateCollection|Variables[]
+     */
+    public function localizations(): IlluminateCollection
     {
         return collect($this->localizations);
     }

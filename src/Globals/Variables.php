@@ -28,11 +28,19 @@ class Variables implements Contract, Localization, Augmentable
         $this->supplements = collect();
     }
 
+    /**
+     * @param  GlobalSet|null  $set
+     * @return Variables|GlobalSet
+     */
     public function globalSet($set = null)
     {
         return $this->fluentlyGetOrSet('set')->args(func_get_args());
     }
 
+    /**
+     * @param  string|null  $locale
+     * @return Variables|string
+     */
     public function locale($locale = null)
     {
         return $this->fluentlyGetOrSet('locale')->args(func_get_args());

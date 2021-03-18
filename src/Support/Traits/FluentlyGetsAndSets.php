@@ -9,10 +9,10 @@ trait FluentlyGetsAndSets
     /**
      * Fluently get or set property using the FluentGetterSetter helper class.
      *
-     * @param string $property
+     * @param  string  $property
      * @return FluentGetterSetter
      */
-    public function fluentlyGetOrSet($property)
+    public function fluentlyGetOrSet(string $property): FluentGetterSetter
     {
         return new FluentGetterSetter($this, $property);
     }

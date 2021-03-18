@@ -5,6 +5,7 @@ namespace Statamic\Support;
 use Closure;
 use ReflectionException;
 use ReflectionObject;
+use ReflectionProperty;
 
 class FluentGetterSetter
 {
@@ -17,10 +18,10 @@ class FluentGetterSetter
     /**
      * Instantiate fluent getter/setter helper.
      *
-     * @param mixed $object
-     * @param string $property
+     * @param  mixed  $object
+     * @param  string  $property
      */
-    public function __construct($object, $property)
+    public function __construct($object, string $property)
     {
         $this->object = $object;
         $this->property = $property;
@@ -32,7 +33,7 @@ class FluentGetterSetter
      * @param Closure $callback
      * @return $this
      */
-    public function getter(Closure $callback)
+    public function getter(Closure $callback): FluentGetterSetter
     {
         $this->getter = $callback;
 
@@ -42,10 +43,10 @@ class FluentGetterSetter
     /**
      * Define custom setter logic.
      *
-     * @param Closure $callback
+     * @param  Closure  $callback
      * @return $this
      */
-    public function setter($callback)
+    public function setter(Closure $callback): FluentGetterSetter
     {
         $this->setter = $callback;
 
@@ -55,10 +56,10 @@ class FluentGetterSetter
     /**
      * Define custom logic to be run after the setter.
      *
-     * @param Closure $callback
+     * @param  Closure  $callback
      * @return $this
      */
-    public function afterSetter($callback)
+    public function afterSetter(Closure $callback): FluentGetterSetter
     {
         $this->afterSetter = $callback;
 
@@ -144,9 +145,10 @@ class FluentGetterSetter
     /**
      * Get reflected property.
      *
-     * @return \ReflectionProperty
+     * @return ReflectionProperty
+     * @throws ReflectionException
      */
-    protected function reflectedProperty()
+    protected function reflectedProperty(): ReflectionProperty
     {
         $property = (new ReflectionObject($this->object))->getProperty($this->property);
         $property->setAccessible(true);

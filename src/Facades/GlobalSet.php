@@ -7,9 +7,10 @@ use Statamic\Contracts\Globals\GlobalRepository;
 
 /**
  * @method static \Statamic\Globals\GlobalCollection all()
- * @method static null|\Statamic\Globals\GlobalCollection find($id)
- * @method static null|\Statamic\Globals\GlobalCollection findByHandle($handle)
+ * @method static null|\Statamic\Globals\GlobalSet find($id)
+ * @method static null|\Statamic\Globals\GlobalSet findByHandle($handle)
  * @method static void save($global);
+ * @method static delete(\Statamic\Globals\GlobalSet $param)
  *
  * @see \Statamic\Globals\GlobalCollection
  */
