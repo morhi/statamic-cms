@@ -15,6 +15,7 @@ use Statamic\Fields\BlueprintRepository;
  * @method static \Statamic\Fields\Blueprint make($handle = null)
  * @method static \Statamic\Fields\Blueprint makeFromFields($fields)
  * @method static \Statamic\Fields\Blueprint makeFromSections($sections)
+ * @method static in(string $string)
  *
  * @see \Statamic\Fields\Blueprint
  */

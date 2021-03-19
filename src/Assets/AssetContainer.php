@@ -62,7 +62,7 @@ class AssetContainer implements AssetContainerContract, Augmentable
         return rtrim($this->disk()->path('/'), '/');
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s.yaml', [
             rtrim(Stache::store('asset-containers')->directory(), '/'),

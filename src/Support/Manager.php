@@ -4,6 +4,8 @@ namespace Statamic\Support;
 
 use Closure;
 use InvalidArgumentException;
+use Statamic\API\Cacher as APICacher;
+use Statamic\StaticCaching\Cacher as StaticCacher;
 
 abstract class Manager
 {
@@ -16,14 +18,23 @@ abstract class Manager
         $this->app = $app;
     }
 
-    public function driver($name = null)
+    /**
+     * @param  string|null  $name
+     * @return APICacher|StaticCacher
+     */
+    public function driver(string $name = null)
     {
         $name = $name ?: $this->getDefaultDriver();
 
         return $this->drivers[$name] = $this->get($name);
     }
 
-    protected function get($name)
+
+    /**
+     * @param  string  $name
+     * @return APICacher|StaticCacher
+     */
+    protected function get(string $name)
     {
         return $this->drivers[$name] ?? $this->resolve($name);
     }

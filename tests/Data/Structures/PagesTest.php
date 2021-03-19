@@ -83,7 +83,7 @@ class PagesTest extends TestCase
     protected function newTree()
     {
         return new class extends Tree {
-            public function path()
+            public function path(): string
             {
                 //
             }

@@ -84,7 +84,7 @@ class Revision implements Contract, Arrayable
         return $this->fluentlyGetOrSet('date')->value($date);
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s/%s.yaml', [
             Revisions::directory(),

@@ -61,7 +61,7 @@ class Term implements TermContract
         return $this->taxonomy;
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s/%s.yaml', [
             rtrim(Stache::store('terms')->directory(), '/'),

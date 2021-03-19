@@ -30,12 +30,12 @@ class Statamic
         return \Facades\Statamic\Version::get();
     }
 
-    public static function pro()
+    public static function pro(): bool
     {
         return config('statamic.editions.pro');
     }
 
-    public static function enablePro()
+    public static function enablePro(): void
     {
         $path = config_path('statamic/editions.php');
 
@@ -50,85 +50,85 @@ class Statamic
         File::put($path, $contents);
     }
 
-    public static function availableScripts(Request $request)
+    public static function availableScripts(Request $request): array
     {
         return static::$scripts;
     }
 
-    public static function availableExternalScripts(Request $request)
+    public static function availableExternalScripts(Request $request): array
     {
         return static::$externalScripts;
     }
 
-    public static function script($name, $path)
+    public static function script($name, $path): Statamic
     {
         static::$scripts[$name][] = str_finish($path, '.js');
 
         return new static;
     }
 
-    public static function externalScript($url)
+    public static function externalScript($url): Statamic
     {
         static::$externalScripts[] = $url;
 
         return new static;
     }
 
-    public static function availableStyles(Request $request)
+    public static function availableStyles(Request $request): array
     {
         return static::$styles;
     }
 
-    public static function style($name, $path)
+    public static function style($name, $path): Statamic
     {
         static::$styles[$name][] = str_finish($path, '.css');
 
         return new static;
     }
 
-    public static function pushWebRoutes(Closure $routes)
+    public static function pushWebRoutes(Closure $routes): Statamic
     {
         static::$webRoutes[] = $routes;
 
         return new static;
     }
 
-    public static function pushCpRoutes(Closure $routes)
+    public static function pushCpRoutes(Closure $routes): Statamic
     {
         static::$cpRoutes[] = $routes;
 
         return new static;
     }
 
-    public static function pushActionRoutes(Closure $routes)
+    public static function pushActionRoutes(Closure $routes): Statamic
     {
         static::$actionRoutes[] = $routes;
 
         return new static;
     }
 
-    public static function additionalCpRoutes()
+    public static function additionalCpRoutes(): void
     {
         foreach (static::$cpRoutes as $routes) {
             $routes();
         }
     }
 
-    public static function additionalWebRoutes()
+    public static function additionalWebRoutes(): void
     {
         foreach (static::$webRoutes as $routes) {
             $routes();
         }
     }
 
-    public static function additionalActionRoutes()
+    public static function additionalActionRoutes(): void
     {
         foreach (static::$actionRoutes as $routes) {
             $routes();
         }
     }
 
-    public static function isCpRoute()
+    public static function isCpRoute(): bool
     {
         if (! config('statamic.cp.enabled')) {
             return false;
@@ -137,7 +137,7 @@ class Statamic
         return starts_with(request()->path(), config('statamic.cp.route'));
     }
 
-    public static function cpRoute($route, $params = [])
+    public static function cpRoute($route, $params = []): ?string
     {
         if (! config('statamic.cp.enabled')) {
             return null;
@@ -153,7 +153,7 @@ class Statamic
         return $route;
     }
 
-    public static function isApiRoute()
+    public static function isApiRoute(): bool
     {
         if (! config('statamic.api.enabled') || ! static::pro()) {
             return false;
@@ -162,7 +162,7 @@ class Statamic
         return starts_with(request()->path(), config('statamic.api.route'));
     }
 
-    public static function apiRoute($route, $params = [])
+    public static function apiRoute($route, $params = []): ?string
     {
         if (! config('statamic.api.enabled') || ! static::pro()) {
             return null;
@@ -178,7 +178,7 @@ class Statamic
         return $route;
     }
 
-    public static function isAmpRequest()
+    public static function isAmpRequest(): bool
     {
         if (! config('statamic.amp.enabled')) {
             return false;
@@ -191,21 +191,21 @@ class Statamic
         return starts_with($url, '/'.config('statamic.amp.route'));
     }
 
-    public static function jsonVariables(Request $request)
+    public static function jsonVariables(Request $request): array
     {
         return collect(static::$jsonVariables)->map(function ($variable) use ($request) {
             return is_callable($variable) ? $variable($request) : $variable;
         })->all();
     }
 
-    public static function provideToScript(array $variables)
+    public static function provideToScript(array $variables): Statamic
     {
         static::$jsonVariables = array_merge(static::$jsonVariables, $variables);
 
         return new static;
     }
 
-    public static function svg($name, $attrs = null)
+    public static function svg($name, $attrs = null): string
     {
         if ($attrs) {
             $attrs = " class=\"{$attrs}\"";
@@ -218,17 +218,17 @@ class Statamic
         return str_replace('<svg', sprintf('<svg%s', $attrs), $svg);
     }
 
-    public static function vendorAssetUrl($url = '/')
+    public static function vendorAssetUrl($url = '/'): string
     {
         return asset(URL::tidy('vendor/'.$url));
     }
 
-    public static function cpAssetUrl($url = '/')
+    public static function cpAssetUrl($url = '/'): string
     {
         return static::vendorAssetUrl('statamic/cp/'.$url);
     }
 
-    public static function flash()
+    public static function flash(): array
     {
         if ($success = session('success')) {
             $messages[] = ['type' => 'success', 'message' => $success];
@@ -241,12 +241,12 @@ class Statamic
         return $messages ?? [];
     }
 
-    public static function crumb(...$values)
+    public static function crumb(...$values): string
     {
         return implode(' ‹ ', array_map('__', $values));
     }
 
-    public static function docsUrl($url)
+    public static function docsUrl($url): string
     {
         return URL::tidy('https://statamic.dev/'.$url);
     }

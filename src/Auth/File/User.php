@@ -108,7 +108,7 @@ class User extends BaseUser
         return $this->fluentlyGetOrSet('password')->args(func_get_args());
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s.yaml', [
             rtrim(Stache::store('users')->directory(), '/'),

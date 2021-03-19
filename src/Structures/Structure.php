@@ -24,7 +24,11 @@ abstract class Structure implements StructureContract
         return $this->handle();
     }
 
-    public function handle($handle = null)
+    /**
+     * @param  string|null  $handle
+     * @return Structure|string
+     */
+    public function handle(string $handle = null)
     {
         if (func_num_args() === 0) {
             return $this->handle;

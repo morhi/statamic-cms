@@ -14,6 +14,8 @@ use Statamic\Contracts\Entries\CollectionRepository;
  * @method static \Illuminate\Support\Collection handles()
  * @method static bool handleExists(string $handle)
  * @method static \Illuminate\Support\Collection whereStructured()
+ * @method static save(\Statamic\Entries\Collection $param)
+ * @method static updateEntryUris(\Statamic\Entries\Collection $param, mixed|null $ids)
  *
  * @see \Illuminate\Support\Collection
  * @see \Statamic\Entries\Collection

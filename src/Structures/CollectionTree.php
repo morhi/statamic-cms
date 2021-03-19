@@ -20,7 +20,7 @@ class CollectionTree extends Tree
         });
     }
 
-    public function path()
+    public function path(): string
     {
         $path = Stache::store('collection-trees')->directory();
 

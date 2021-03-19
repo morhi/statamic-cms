@@ -2,8 +2,15 @@
 
 namespace Statamic\Search;
 
+use Illuminate\Support\Collection as IlluminateCollection;
+use Statamic\API\Cacher as APICacher;
+use Statamic\StaticCaching\Cacher as StaticCacher;
+
 class Search
 {
+    /**
+     * @var IndexManager
+     */
     protected $indexes;
 
     public function __construct(IndexManager $indexes)
@@ -11,18 +18,27 @@ class Search
         $this->indexes = $indexes;
     }
 
-    public function indexes()
+    public function indexes(): IlluminateCollection
     {
         return $this->indexes->all();
     }
 
-    public function index($index = null)
+    /**
+     * @param  string|null  $index
+     * @return APICacher|StaticCacher
+     */
+    public function index(string $index = null)
     {
         return $this->indexes->index($index);
     }
 
-    public function in($index = null)
+    /**
+     * @param  string|null  $index
+     * @return APICacher|StaticCacher
+     */
+    public function in(string $index = null)
     {
+        dd($this->index($index));
         return $this->index($index);
     }
 

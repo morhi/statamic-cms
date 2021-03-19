@@ -101,7 +101,7 @@ class Blueprint implements Augmentable
         return $this->initialPath;
     }
 
-    public function path()
+    public function path(): string
     {
         return Path::tidy(vsprintf('%s/%s/%s.yaml', [
             Facades\Blueprint::directory(),

@@ -286,9 +286,14 @@ class CollectionTest extends TestCase
         $this->assertEquals('title', $alpha->sortField());
         $this->assertEquals('asc', $alpha->sortDirection());
 
+        $foo = (new Collection)->sortField('foo');
+        $this->assertEquals('foo', $foo->sortField());
+        $this->assertEquals('asc', $foo->sortDirection());
+
         $dated = (new Collection)->dated(true);
         $this->assertEquals('date', $dated->sortField());
         $this->assertEquals('desc', $dated->sortDirection());
+        $this->assertTrue($dated->dated());
 
         $ordered = (new Collection)->structureContents(['max_depth' => 1]);
         $this->assertEquals('order', $ordered->sortField());

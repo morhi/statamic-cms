@@ -11,7 +11,7 @@ trait ExistsAsFile
 {
     protected $initialPath;
 
-    abstract public function path();
+    abstract public function path(): string;
 
     public function initialPath($path = null)
     {

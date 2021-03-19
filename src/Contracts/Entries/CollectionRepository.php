@@ -20,5 +20,13 @@ interface CollectionRepository
 
     public function handleExists(string $handle): bool;
 
+    public function save(Collection $collection): void;
+
+    public function delete(Collection $collection): void;
+
+    public function updateEntryUris(Collection $collection, $ids = null): void;
+
+    public function updateEntryOrder(Collection $collection, $ids = null): void;
+
     public function whereStructured(): IlluminateCollection;
 }

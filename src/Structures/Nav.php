@@ -36,7 +36,7 @@ class Nav extends Structure implements Contract
         return true;
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s.yaml', [
             rtrim(Stache::store('navigation')->directory(), '/'),

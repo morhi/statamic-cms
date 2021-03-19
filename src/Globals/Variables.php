@@ -61,7 +61,7 @@ class Variables implements Contract, Localization, Augmentable
         return $this->globalSet()->title();
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s%s.%s', [
             rtrim(Stache::store('globals')->directory(), '/'),

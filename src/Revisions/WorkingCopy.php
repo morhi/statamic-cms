@@ -6,7 +6,7 @@ use Statamic\Facades\Revision as Revisions;
 
 class WorkingCopy extends Revision
 {
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s/working.yaml', [
             Revisions::directory(),

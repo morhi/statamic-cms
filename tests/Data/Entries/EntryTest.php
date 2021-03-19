@@ -597,18 +597,21 @@ class EntryTest extends TestCase
     public function the_blueprint_is_blinked_when_getting_and_flushed_when_setting()
     {
         $entry = (new Entry)->collection('blog');
+        $oldBlueprint = (new Blueprint())->setHandle('old');
+        $newBlueprint = (new Blueprint())->setHandle('new');
+
         $collection = Mockery::mock(Collection::make('blog'));
-        $collection->shouldReceive('entryBlueprint')->with(null, $entry)->once()->andReturn('the old blueprint');
-        $collection->shouldReceive('entryBlueprint')->with('new', $entry)->once()->andReturn('the new blueprint');
+        $collection->shouldReceive('entryBlueprint')->with(null, $entry)->once()->andReturn($oldBlueprint);
+        $collection->shouldReceive('entryBlueprint')->with('new', $entry)->once()->andReturn($newBlueprint);
         Collection::shouldReceive('findByHandle')->with('blog')->andReturn($collection);
 
-        $this->assertEquals('the old blueprint', $entry->blueprint());
-        $this->assertEquals('the old blueprint', $entry->blueprint());
+        $this->assertEquals($oldBlueprint, $entry->blueprint());
+        $this->assertEquals($oldBlueprint, $entry->blueprint());
 
         $entry->blueprint('new');
 
-        $this->assertEquals('the new blueprint', $entry->blueprint());
-        $this->assertEquals('the new blueprint', $entry->blueprint());
+        $this->assertEquals($newBlueprint, $entry->blueprint());
+        $this->assertEquals($newBlueprint, $entry->blueprint());
     }
 
     /** @test */

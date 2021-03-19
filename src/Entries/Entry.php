@@ -104,7 +104,11 @@ class Entry implements Contract, Augmentable, Responsable, Localization, Protect
             ->args(func_get_args());
     }
 
-    public function blueprint($blueprint = null)
+    /**
+     * @param  string|null  $blueprint
+     * @return Entry|string
+     */
+    public function blueprint(string $blueprint = null)
     {
         $key = "entry-{$this->id()}-blueprint";
 
@@ -331,7 +335,7 @@ class Entry implements Contract, Augmentable, Responsable, Localization, Protect
         Facades\Entry::taxonomize($this);
     }
 
-    public function path()
+    public function path(): string
     {
         $prefix = '';
 

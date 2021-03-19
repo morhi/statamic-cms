@@ -73,7 +73,7 @@ class Taxonomy implements Contract, Responsable, AugmentableContract
         return cp_route('taxonomies.destroy', $this->handle());
     }
 
-    public function path()
+    public function path(): string
     {
         return vsprintf('%s/%s.yaml', [
             rtrim(Stache::store('taxonomies')->directory(), '/'),

@@ -298,7 +298,7 @@ class PageTest extends TestCase
         return new class extends Tree {
             private $structure;
 
-            public function path()
+            public function path(): string
             {
                 //
             }

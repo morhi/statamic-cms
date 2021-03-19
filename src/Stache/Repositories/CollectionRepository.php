@@ -64,7 +64,7 @@ class CollectionRepository implements RepositoryContract
         return $this->handles()->contains($handle);
     }
 
-    public function save(Collection $collection)
+    public function save(Collection $collection): void
     {
         $this->store->save($collection);
 
@@ -73,17 +73,17 @@ class CollectionRepository implements RepositoryContract
         }
     }
 
-    public function delete(Collection $collection)
+    public function delete(Collection $collection): void
     {
         $this->store->delete($collection);
     }
 
-    public function updateEntryUris(Collection $collection, $ids = null)
+    public function updateEntryUris(Collection $collection, $ids = null): void
     {
         $this->store->updateEntryUris($collection, $ids);
     }
 
-    public function updateEntryOrder(Collection $collection, $ids = null)
+    public function updateEntryOrder(Collection $collection, $ids = null): void
     {
         $this->store->updateEntryOrder($collection, $ids);
     }
