@@ -137,10 +137,8 @@ class Assets extends Fieldtype
 
     public function process($data)
     {
-        $max_files = (int) $this->config('max_files');
-
         $values = collect($data)->map(function ($id) {
-            return Asset::find($id)->path();
+            return Asset::find($id)?->path();
         });
 
         return $this->config('max_files') === 1 ? $values->first() : $values->all();
