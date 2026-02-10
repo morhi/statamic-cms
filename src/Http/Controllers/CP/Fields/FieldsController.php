@@ -7,6 +7,9 @@ use Facades\Statamic\Fields\FieldtypeRepository;
 use Illuminate\Http\Request;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Fieldset;
+use Statamic\Facades\Role;
+use Statamic\Facades\User;
+use Statamic\Facades\UserGroup;
 use Statamic\Fields\Field;
 use Statamic\Http\Controllers\CP\CpController;
 use Statamic\Http\Middleware\CP\CanManageBlueprints;
@@ -131,6 +134,30 @@ class FieldsController extends CpController
         $values = array_merge($request->values, $fields->process()->values()->all());
 
         return $values;
+    }
+
+    public function permissionOptions()
+    {
+        $roles = Role::all()->map(fn ($role) => [
+            'id' => $role->handle(),
+            'title' => $role->title(),
+        ])->values()->all();
+
+        $groups = UserGroup::all()->map(fn ($group) => [
+            'id' => $group->handle(),
+            'title' => $group->title(),
+        ])->values()->all();
+
+        $users = User::all()->map(fn ($user) => [
+            'id' => $user->id(),
+            'title' => $user->name() ?: $user->email(),
+        ])->values()->all();
+
+        return [
+            'roles' => $roles,
+            'groups' => $groups,
+            'users' => $users,
+        ];
     }
 
     protected function blueprint($blueprint)

@@ -172,7 +172,7 @@ class TermsController extends CpController
 
         $fields = $term->blueprint()->fields()->addValues($request->except('id'));
 
-        $fields->validate([
+        $fields->editableBy(User::current())->validate([
             'title' => 'required',
             'slug' => [
                 'required',
@@ -181,7 +181,10 @@ class TermsController extends CpController
             ],
         ]);
 
-        $values = $fields->process()->values();
+        $values = $fields
+            ->protectUnauthorizedValues(User::current(), $term->data()->all())
+            ->process()
+            ->values();
 
         if ($explicitBlueprint = $values->pull('blueprint')) {
             $term->blueprint($explicitBlueprint);
@@ -288,7 +291,7 @@ class TermsController extends CpController
 
         $fields = $blueprint->fields()->addValues($request->all());
 
-        $fields->validate([
+        $fields->editableBy(User::current())->validate([
             'title' => 'required',
             'slug' => ['required', new UniqueTermValue(taxonomy: $taxonomy->handle(), site: $site->handle())],
         ]);

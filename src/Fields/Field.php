@@ -7,6 +7,7 @@ use GraphQL\Type\Definition\Type;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Lang;
 use Rebing\GraphQL\Support\Field as GqlField;
+use Statamic\Contracts\Auth\User;
 use Statamic\Contracts\Forms\Form;
 use Statamic\Facades\GraphQL;
 use Statamic\Rules\Handle;
@@ -266,6 +267,22 @@ class Field implements Arrayable
 
     public function toPublishArray()
     {
+        $visibility = $this->visibility();
+        $permissionReadOnly = false;
+
+        if ($user = \Statamic\Facades\User::current()) {
+            $perms = $this->resolvePermissions($user);
+
+            if (! $perms['can_view']) {
+                return null;
+            }
+
+            if (! $perms['can_edit'] && $visibility !== 'hidden' && $visibility !== 'computed') {
+                $visibility = 'read_only';
+                $permissionReadOnly = true;
+            }
+        }
+
         $array = array_merge($this->preProcessedConfig(), [
             'handle' => $this->handle,
             'prefix' => $this->prefix,
@@ -273,9 +290,10 @@ class Field implements Arrayable
             'display' => $this->display(),
             'instructions' => $this->instructions(),
             'required' => $this->isRequired(),
-            'visibility' => $this->visibility(),
-            'read_only' => $this->visibility() === 'read_only', // Deprecated: Addon fieldtypes should now reference new `visibility` state.
+            'visibility' => $visibility,
+            'read_only' => $visibility === 'read_only', // Deprecated: Addon fieldtypes should now reference new `visibility` state.
             'always_save' => $this->alwaysSave(),
+            'permission_read_only' => $permissionReadOnly,
         ]);
 
         unset($array['validate']);
@@ -406,6 +424,16 @@ class Field implements Arrayable
             'hide_when',
             'hide_when_any',
         ])->all();
+    }
+
+    public function permissions(): array
+    {
+        return Arr::get($this->config, 'permissions', []);
+    }
+
+    public function resolvePermissions(?User $user): array
+    {
+        return FieldPermissionResolver::resolve($this, $user);
     }
 
     public function get(string $key, $fallback = null)

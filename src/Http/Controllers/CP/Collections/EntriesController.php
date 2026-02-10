@@ -202,7 +202,9 @@ class EntriesController extends CpController
             ->fields()
             ->addValues($data);
 
-        $fields
+        $editableFields = $fields->editableBy(User::current());
+
+        $editableFields
             ->validator()
             ->withRules(Entry::updateRules($collection, $entry))
             ->withReplacements([
@@ -211,7 +213,10 @@ class EntriesController extends CpController
                 'site' => $entry->locale(),
             ])->validate();
 
-        $values = $fields->process()->values();
+        $values = $fields
+            ->protectUnauthorizedValues(User::current(), $entry->data()->all())
+            ->process()
+            ->values();
 
         if ($explicitBlueprint = $values->pull('blueprint')) {
             $entry->blueprint($explicitBlueprint);
@@ -378,7 +383,7 @@ class EntriesController extends CpController
             ->fields()
             ->addValues($data);
 
-        $fields
+        $fields->editableBy(User::current())
             ->validator()
             ->withRules(Entry::createRules($collection, $site))
             ->withReplacements([

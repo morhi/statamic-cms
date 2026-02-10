@@ -19,6 +19,7 @@
                     <TabTrigger name="settings" :text="__('Settings')" />
                     <TabTrigger name="conditions" :text="__('Conditions')" />
                     <TabTrigger name="validation" :text="__('Validation')" />
+                    <TabTrigger v-if="isPro" name="permissions" :text="__('Permissions')" />
                 </TabList>
 
                 <div>
@@ -52,6 +53,15 @@
                             <FieldValidationBuilder :config="values" @updated="updateField('validate', $event)" />
                         </CardPanel>
                     </TabContent>
+
+                    <TabContent v-if="isPro" name="permissions">
+                        <CardPanel :heading="__('Permissions')">
+                            <FieldPermissionsBuilder
+                                :config="values"
+                                @updated="updateFieldPermissions"
+                            />
+                        </CardPanel>
+                    </TabContent>
                 </div>
             </Tabs>
         </section>
@@ -60,8 +70,10 @@
 
 <script>
 import { FieldConditionsBuilder, FIELD_CONDITIONS_KEYS } from '../field-conditions/FieldConditions.js';
+import { FieldPermissionsBuilder, FIELD_PERMISSIONS_KEYS } from '../field-permissions/FieldPermissions.js';
 import FieldValidationBuilder from '../field-validation/Builder.vue';
 import { Heading, Button, Tabs, TabList, TabTrigger, TabContent, CardPanel, Icon, StackHeader, StackContent } from '@/components/ui';
+import { usePage } from '@inertiajs/vue3';
 
 export default {
     emits: ['committed', 'closed'],
@@ -70,6 +82,7 @@ export default {
         StackContent,
         StackHeader,
         FieldConditionsBuilder,
+        FieldPermissionsBuilder,
         FieldValidationBuilder,
         Heading,
         Button,
@@ -192,6 +205,10 @@ export default {
         isNestedField() {
             return this.isInsideSet || this.isInsideConfigFields;
         },
+
+        isPro() {
+            return usePage().props._statamic?.isPro;
+        },
     },
 
     created() {
@@ -249,6 +266,18 @@ export default {
             this.values.always_save = alwaysSave;
 
             this.markFieldEdited('always_save');
+        },
+
+        updateFieldPermissions(permissions) {
+            if (Object.keys(permissions).length) {
+                this.values = { ...this.values, permissions };
+            } else {
+                let values = { ...this.values };
+                delete values.permissions;
+                this.values = values;
+            }
+
+            this.markFieldEdited('permissions');
         },
 
         markFieldEdited(handle) {

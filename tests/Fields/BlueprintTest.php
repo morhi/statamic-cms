@@ -454,6 +454,7 @@ class BlueprintTest extends TestCase
                                     'required' => true,
                                     'read_only' => false, // deprecated
                                     'always_save' => false,
+                                    'permission_read_only' => false,
                                 ],
                             ],
                         ],
@@ -488,6 +489,7 @@ class BlueprintTest extends TestCase
                                     'required' => false,
                                     'read_only' => false, // deprecated
                                     'always_save' => false,
+                                    'permission_read_only' => false,
                                 ],
                             ],
                         ],
@@ -582,6 +584,7 @@ class BlueprintTest extends TestCase
                                     'required' => false,
                                     'read_only' => false, // deprecated
                                     'always_save' => false,
+                                    'permission_read_only' => false,
                                 ],
                                 [
                                     'display' => 'Nested Deeper Two',
@@ -609,6 +612,7 @@ class BlueprintTest extends TestCase
                                     'required' => false,
                                     'read_only' => false, // deprecated
                                     'always_save' => false,
+                                    'permission_read_only' => false,
                                 ],
                             ],
                         ],

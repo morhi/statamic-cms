@@ -101,9 +101,12 @@ class GlobalVariablesController extends CpController
 
         $fields = $set->blueprint()->fields()->addValues($request->all());
 
-        $fields->validate();
+        $fields->editableBy(User::current())->validate();
 
-        $values = $fields->process()->values();
+        $values = $fields
+            ->protectUnauthorizedValues(User::current(), $set->data()->all())
+            ->process()
+            ->values();
 
         if ($set->hasOrigin()) {
             $values = $values->only($request->input('_localized'));

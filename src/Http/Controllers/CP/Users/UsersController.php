@@ -189,7 +189,7 @@ class UsersController extends CpController
 
         $fields = $blueprint->fields()->except(['roles', 'groups'])->addValues($request->all());
 
-        $fields->validate(['email' => ['required', 'email', new UniqueUserValue]]);
+        $fields->editableBy(User::current())->validate(['email' => ['required', 'email', new UniqueUserValue]]);
 
         if ($request->input('_validate_only')) {
             return [];
@@ -311,13 +311,17 @@ class UsersController extends CpController
 
         $fields = $user->blueprint()->fields()->except(['password'])->addValues($request->except('id'));
 
-        $fields
+        $fields->editableBy(User::current())
             ->validator()
             ->withRules(['email' => ['required', 'email', new UniqueUserValue(except: $user->id())]])
             ->withReplacements(['id' => $user->id()])
             ->validate();
 
-        $values = $fields->process()->values()->except(['email', 'groups', 'roles', 'super']);
+        $values = $fields
+            ->protectUnauthorizedValues(User::current(), $user->data()->all())
+            ->process()
+            ->values()
+            ->except(['email', 'groups', 'roles', 'super']);
 
         foreach ($values as $key => $value) {
             $user->set($key, $value);

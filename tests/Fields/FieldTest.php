@@ -352,6 +352,7 @@ class FieldTest extends TestCase
             'required' => true,
             'read_only' => false, // deprecated
             'always_save' => false,
+            'permission_read_only' => false,
         ], $field->toPublishArray());
     }
 

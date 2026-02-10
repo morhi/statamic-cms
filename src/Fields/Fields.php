@@ -5,6 +5,7 @@ namespace Statamic\Fields;
 use Facades\Statamic\Fields\FieldRepository;
 use Facades\Statamic\Fields\Validator;
 use Illuminate\Support\Collection;
+use Statamic\Contracts\Auth\User;
 use Statamic\Exceptions\FieldsetNotFoundException;
 use Statamic\Facades\Blink;
 use Statamic\Facades\Fieldset as FieldsetRepository;
@@ -152,7 +153,7 @@ class Fields
         $blink = md5(json_encode($this->fields));
 
         return Blink::once($blink, function () {
-            return $this->fields->values()->map->toPublishArray()->all();
+            return $this->fields->values()->map->toPublishArray()->filter()->values()->all();
         });
     }
 
@@ -313,6 +314,32 @@ class Fields
         $recursion->pop();
 
         return $imported;
+    }
+
+    public function protectUnauthorizedValues(?User $user, array $existingValues): self
+    {
+        $fields = $this->fields->map(function ($field) use ($user, $existingValues) {
+            $perms = $field->resolvePermissions($user);
+
+            if (! $perms['can_edit']) {
+                $existing = Arr::get($existingValues, $field->handle());
+
+                return $field->newInstance()->setValue($existing);
+            }
+
+            return $field;
+        });
+
+        return $this->newInstance()->setFields($fields);
+    }
+
+    public function editableBy(?User $user): self
+    {
+        return $this->newInstance()->setFields(
+            $this->fields->filter(function ($field) use ($user) {
+                return $field->resolvePermissions($user)['can_edit'];
+            })
+        );
     }
 
     public function meta()

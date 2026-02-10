@@ -140,6 +140,7 @@ class SectionTest extends TestCase
                     'required' => true,
                     'read_only' => false, // deprecated
                     'always_save' => false,
+                    'permission_read_only' => false,
                 ],
                 [
                     'display' => 'Two',
@@ -163,6 +164,7 @@ class SectionTest extends TestCase
                     'required' => false,
                     'read_only' => false, // deprecated
                     'always_save' => false,
+                    'permission_read_only' => false,
                 ],
             ],
         ], $section->toPublishArray());

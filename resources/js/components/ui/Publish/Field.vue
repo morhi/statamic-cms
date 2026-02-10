@@ -169,6 +169,8 @@ const isReadOnly = computed(() => {
     return isLocked.value || props.config.visibility === 'read_only' || false;
 });
 
+const isPermissionReadOnly = computed(() => props.config.permission_read_only || false);
+
 const isLocked = computed(() => false); // todo
 
 const isSyncable = computed(() => {
@@ -239,6 +241,7 @@ const fieldtypeComponentEvents = computed(() => ({
                             {{ __(config.display) }}
                         </span>
                     </template>
+                    <Icon v-if="isPermissionReadOnly" name="padlock-locked" class="ms-1 size-3.5 text-gray-500 dark:text-dark-175" v-tooltip="__('messages.field_permission_read_only')" />
                     <ui-button size="xs" inset icon="synced" variant="ghost" v-tooltip="__('messages.field_synced_with_origin')" v-if="!isReadOnly && isSyncable" v-show="isSynced" @click="desync" />
                     <ui-button size="xs" inset icon="unsynced" variant="ghost" v-tooltip="__('messages.field_desynced_from_origin')" v-if="!isReadOnly && isSyncable" v-show="!isSynced" @click="sync" />
                 </Label>
