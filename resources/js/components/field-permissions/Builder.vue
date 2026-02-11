@@ -42,11 +42,15 @@ watch(saveablePermissions, (permissions) => {
 
 function loadOptions() {
     proxy.$axios.get(cp_url('fields/permission-options')).then((response) => {
-        rolesOptions.value = response.data.roles;
-        groupsOptions.value = response.data.groups;
-        usersOptions.value = response.data.users;
+        rolesOptions.value = mapOptions(response.data.roles);
+        groupsOptions.value = mapOptions(response.data.groups);
+        usersOptions.value = mapOptions(response.data.users);
         loading.value = false;
     });
+}
+
+function mapOptions(items) {
+    return items.map((item) => ({ value: item.id, label: item.title }));
 }
 
 function initPermissions() {
@@ -92,8 +96,6 @@ onMounted(() => {
                         multiple
                         :options="rolesOptions"
                         :model-value="view.roles"
-                        option-label="title"
-                        option-value="id"
                         :placeholder="__('Select roles...')"
                         @update:modelValue="view.roles = $event"
                     />
@@ -104,8 +106,6 @@ onMounted(() => {
                         multiple
                         :options="groupsOptions"
                         :model-value="view.groups"
-                        option-label="title"
-                        option-value="id"
                         :placeholder="__('Select user groups...')"
                         @update:modelValue="view.groups = $event"
                     />
@@ -116,8 +116,6 @@ onMounted(() => {
                         multiple
                         :options="usersOptions"
                         :model-value="view.users"
-                        option-label="title"
-                        option-value="id"
                         :placeholder="__('Select users...')"
                         @update:modelValue="view.users = $event"
                     />
@@ -139,8 +137,6 @@ onMounted(() => {
                         multiple
                         :options="rolesOptions"
                         :model-value="edit.roles"
-                        option-label="title"
-                        option-value="id"
                         :placeholder="__('Select roles...')"
                         @update:modelValue="edit.roles = $event"
                     />
@@ -151,8 +147,6 @@ onMounted(() => {
                         multiple
                         :options="groupsOptions"
                         :model-value="edit.groups"
-                        option-label="title"
-                        option-value="id"
                         :placeholder="__('Select user groups...')"
                         @update:modelValue="edit.groups = $event"
                     />
@@ -163,8 +157,6 @@ onMounted(() => {
                         multiple
                         :options="usersOptions"
                         :model-value="edit.users"
-                        option-label="title"
-                        option-value="id"
                         :placeholder="__('Select users...')"
                         @update:modelValue="edit.users = $event"
                     />
